@@ -13,9 +13,11 @@ def create_mysql_schema(connection, cursor):
     try:
         with open("/home/hoangduy/PycharmProjects/DataPipeline/src/sql/schema.sql", 'r') as f:
             sql_script = f.read()
-            cursor.execute(sql_script)
+            sql_commands = [cmd.strip() for cmd in sql_script.split(";") if cmd.strip()]
+            for cmd in sql_commands:
+                cursor.execute(cmd)
+                print(f'-------Executed Mysql Command: {cmd}--------')
             print("-----CREATED MYSQL SCHEMA------")
-
     except Error as e:
         connection.roolback()
         raise Exception(f"-------Failed to CREATE MYSQL SCHEMA: ERROR : {e}--------") from e
